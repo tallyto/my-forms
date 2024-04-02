@@ -37,6 +37,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    document.getElementById('export-pdf').addEventListener('click', function() {
+        exportAsPDF();
+    });
+
+     // Função para exportar o formulário preenchido como PDF
+     async function exportAsPDF() {
+        try {
+            // Seletor para o conteúdo do formulário que será exportado como PDF
+            const formContent = document.getElementById('form-builder').innerHTML;
+
+            // Configurações para a exportação do PDF
+            const options = {
+                filename: 'formulario.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Gerar o PDF a partir do conteúdo do formulário
+            await html2pdf().set(options).from(formContent).save();
+
+            alert('Formulário exportado como PDF com sucesso!');
+        } catch (error) {
+            console.error('Erro ao exportar o formulário como PDF:', error);
+            alert('Erro ao exportar o formulário como PDF. Por favor, tente novamente mais tarde.');
+        }
+    }
+
     async function loadForms() {
         try {
             const response = await fetch('/api/forms');
